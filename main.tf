@@ -32,11 +32,26 @@ resource "google_compute_instance_group" "frontendig" {
   network = google_compute_network.vpc_network.self_link
 }
 
+
+
+
+
 resource "google_compute_instance_group" "backendig" {
   name        = "backendig"
-  description = "frontendig"
+  description = "backendig"
   zone        = "europe-north1-a"
   network     = google_compute_network.vpc_network.self_link
+  instances   = google_compute_instance.backend_vms.*.self_link
+
+  named_port {
+    name = "http"
+    port = "8080"
+  }
+
+  named_port {
+    name = "https"
+    port = "8443"
+  }
 }
 
 resource "google_compute_instance_group" "databaseig" {
@@ -44,6 +59,57 @@ resource "google_compute_instance_group" "databaseig" {
   description = "databaseig"
   zone        = "europe-north1-a"
   network     = google_compute_network.vpc_network.self_link
+  instances   = google_compute_instance.database_vms.*.self_link
+
+  named_port {
+    name = "http"
+    port = "8080"
+  }
+
+  named_port {
+    name = "https"
+    port = "8443"
+  }
+}
+
+
+resource "google_compute_instance" "database_vms" {
+  count        = 3
+  name         = "vm${count.index}"
+  machine_type = "g1-small"
+  boot_disk {
+    initialize_params {
+      image = "ubuntu-os-cloud/ubuntu-1804-lts"
+    }
+  }
+  network_interface {
+    network    = google_compute_network.vpc_network.self_link
+    subnetwork = "test-subnetwork"
+  }
+
+  metadata_startup_script = "sudo apt get -y update && sudo apt-get -y install nginx && sudo service nginx start"
+
+
+}
+
+
+resource "google_compute_instance" "backend_vms" {
+  count        = 3
+  name         = "vm${count.index}"
+  machine_type = "g1-small"
+  boot_disk {
+    initialize_params {
+      image = "ubuntu-os-cloud/ubuntu-1804-lts"
+    }
+  }
+  network_interface {
+    network    = google_compute_network.vpc_network.self_link
+    subnetwork = "test-subnetwork"
+  }
+
+  metadata_startup_script = "sudo apt get -y update && sudo apt-get -y install nginx && sudo service nginx start"
+
+
 }
 
 
@@ -57,7 +123,7 @@ resource "google_compute_instance" "vm_instance" {
     }
   }
   network_interface {
-    network    = "${google_compute_network.vpc_network.self_link}"
+    network    = google_compute_network.vpc_network.self_link
     subnetwork = "test-subnetwork"
   }
 
