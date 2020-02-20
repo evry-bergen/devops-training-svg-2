@@ -59,7 +59,7 @@ resource "google_compute_instance_group" "backendig" {
 
 
 resource "google_compute_health_check" "postgresql-hc" {
-  name     = "tcp-health-check"
+  name = "tcp-health-check"
 
   timeout_sec        = 100
   check_interval_sec = 100
@@ -73,7 +73,10 @@ resource "google_compute_health_check" "postgresql-hc" {
 resource "google_compute_backend_service" "db-backend" {
   name          = "dbbackend"
   health_checks = [google_compute_health_check.postgresql-hc.self_link]
-  group = google_compute_instance_group.databaseig.self_link
+
+  backend {
+    group = google_compute_instance_group.databaseig.self_link
+  }
 }
 
 
@@ -81,7 +84,11 @@ resource "google_compute_backend_service" "db-backend" {
 resource "google_compute_backend_service" "middleware-backend" {
   name          = "middlewarebackend"
   health_checks = [google_compute_health_check.http-health-check.self_link]
-  group = google_compute_instance_group.backendig.self_link
+
+  backend {
+    group = google_compute_instance_group.backendig.self_link
+  }
+
 }
 
 
@@ -130,7 +137,7 @@ resource "google_compute_instance" "database_vms" {
     network    = google_compute_network.vpc_network.self_link
     subnetwork = "test-subnetwork"
   }
-  tags = ["database"]
+  tags                    = ["database"]
   metadata_startup_script = "sudo apt get -y update && sudo apt-get -y install nginx && sudo service nginx start"
 
 
@@ -150,7 +157,7 @@ resource "google_compute_instance" "backend_vms" {
     network    = google_compute_network.vpc_network.self_link
     subnetwork = "test-subnetwork"
   }
-  tags = ["backend"]
+  tags                    = ["backend"]
   metadata_startup_script = "sudo apt get -y update && sudo apt-get -y install nginx && sudo service nginx start"
 
 
@@ -170,7 +177,7 @@ resource "google_compute_instance" "vm_instance" {
     network    = google_compute_network.vpc_network.self_link
     subnetwork = "test-subnetwork"
   }
-  tags = ["frontend"]
+  tags                    = ["frontend"]
   metadata_startup_script = "sudo apt get -y update"
 
 
