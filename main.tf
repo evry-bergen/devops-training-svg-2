@@ -1,3 +1,10 @@
+terraform {
+  backend "gcs" {
+    bucket  = "tf-state-prod-shamglam"
+    prefix  = "terraform/state"
+  }
+}
+
 provider "google" {
     project = "svg-devops-training-2"
     region = "europe-north1"
