@@ -12,6 +12,40 @@ provider "google" {
 
 }
 
+resource "google_compute_instance_group" "frontend_ig" {
+  name        = "frontend_ig"
+  description = "frontend_ig"
+  zone        = "europe-noth1-a"
+
+  instances = google_compute_instance.vm_instance.*.self_link
+
+  named_port {
+    name = "http"
+    port = "8080"
+  }
+
+  named_port {
+    name = "https"
+    port = "8443"
+  }
+
+  network = google_compute_network.vpc_network.self_link
+}
+
+resource "google_compute_instance_group" "backend_ig" {
+  name        = "backend_ig"
+  description = "frontend_ig"
+  zone        = "europe-noth1-a"
+  network     = google_compute_network.vpc_network.self_link
+}
+
+resource "google_compute_instance_group" "database_ig" {
+  name        = "database"
+  description = "database_ig"
+  zone        = "europe-noth1-a"
+  network     = google_compute_network.vpc_network.self_link
+}
+
 
 resource "google_compute_instance" "vm_instance" {
   count        = 3
