@@ -29,7 +29,7 @@ resource "google_compute_instance" "vm_instance" {
 
   metadata_startup_script = "sudo apt get -y update && sudo apt-get -y install nginx && sudo service nginx start"
 
-
+  count = 3
 }
 
 
