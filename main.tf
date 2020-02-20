@@ -72,6 +72,7 @@ resource "google_compute_health_check" "postgresql-hc" {
 
 resource "google_compute_backend_service" "db-backend" {
   name          = "dbbackend"
+  protocol      = "TCP"
   health_checks = [google_compute_health_check.postgresql-hc.self_link]
 
   backend {
@@ -135,7 +136,7 @@ resource "google_compute_instance" "database_vms" {
   }
   network_interface {
     network    = google_compute_network.vpc_network.self_link
-    subnetwork = "test-subnetwork"
+    subnetwork = google_compute_subnetwork.db-network.self_link
   }
   tags                    = ["database"]
   metadata_startup_script = "sudo apt get -y update && sudo apt-get -y install nginx && sudo service nginx start"
@@ -155,7 +156,7 @@ resource "google_compute_instance" "backend_vms" {
   }
   network_interface {
     network    = google_compute_network.vpc_network.self_link
-    subnetwork = "test-subnetwork"
+    subnetwork = google_compute_subnetwork.backend-network.self_link
   }
   tags                    = ["backend"]
   metadata_startup_script = "sudo apt get -y update && sudo apt-get -y install nginx && sudo service nginx start"
@@ -175,7 +176,7 @@ resource "google_compute_instance" "vm_instance" {
   }
   network_interface {
     network    = google_compute_network.vpc_network.self_link
-    subnetwork = "test-subnetwork"
+    subnetwork = google_compute_subnetwork.frontend-network.self_link
   }
   tags                    = ["frontend"]
   metadata_startup_script = "sudo apt get -y update"
@@ -184,9 +185,25 @@ resource "google_compute_instance" "vm_instance" {
 }
 
 
-resource "google_compute_subnetwork" "network-with-private-secondary-ip-ranges" {
-  name          = "test-subnetwork"
-  ip_cidr_range = "10.0.0.0/24"
+resource "google_compute_subnetwork" "frontend-network" {
+  name          = "frontend-subnetwork"
+  ip_cidr_range = "10.0.10.0/24"
+  region        = "europe-north1"
+  network       = google_compute_network.vpc_network.self_link
+
+}
+
+resource "google_compute_subnetwork" "backend-network" {
+  name          = "backend-subnetwork"
+  ip_cidr_range = "10.0.20.0/24"
+  region        = "europe-north1"
+  network       = google_compute_network.vpc_network.self_link
+
+}
+
+resource "google_compute_subnetwork" "db-network" {
+  name          = "db-subnetwork"
+  ip_cidr_range = "10.0.30.0/24"
   region        = "europe-north1"
   network       = google_compute_network.vpc_network.self_link
 
