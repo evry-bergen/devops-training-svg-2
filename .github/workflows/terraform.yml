@@ -36,3 +36,4 @@ jobs:
           tf_actions_subcommand: 'plan'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GOOGLE_CREDENTIALS: ${{ secrets.gcp_token }}
