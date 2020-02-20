@@ -1,7 +1,7 @@
 terraform {
   backend "gcs" {
-    bucket  = "tf-state-prod-shamglam"
-    prefix  = "terraform/state"
+    bucket = "tf-state-prod-shamglam"
+    prefix = "terraform/state"
   }
 }
 
