@@ -75,7 +75,7 @@ resource "google_compute_instance_group" "databaseig" {
 
 resource "google_compute_instance" "database_vms" {
   count        = 3
-  name         = "vm${count.index}"
+  name         = "databasevm${count.index}"
   machine_type = "g1-small"
   boot_disk {
     initialize_params {
@@ -95,7 +95,7 @@ resource "google_compute_instance" "database_vms" {
 
 resource "google_compute_instance" "backend_vms" {
   count        = 3
-  name         = "vm${count.index}"
+  name         = "backendvm${count.index}"
   machine_type = "g1-small"
   boot_disk {
     initialize_params {
@@ -115,7 +115,7 @@ resource "google_compute_instance" "backend_vms" {
 
 resource "google_compute_instance" "vm_instance" {
   count        = 3
-  name         = "vm${count.index}"
+  name         = "frontendvm${count.index}"
   machine_type = "g1-small"
   boot_disk {
     initialize_params {
