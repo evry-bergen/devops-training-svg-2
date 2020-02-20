@@ -15,7 +15,7 @@ provider "google" {
 
 resource "google_compute_instance" "vm_instance" {
   count        = 3
-  name         = "VM${count.index}"
+  name         = "vm${count.index}"
   machine_type = "g1-small"
   boot_disk {
     initialize_params {
