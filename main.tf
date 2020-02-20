@@ -14,8 +14,8 @@ provider "google" {
 
 
 resource "google_compute_instance" "vm_instance" {
-
-  name         = "my-instance"
+  count        = 3
+  name         = "VM-${count.index}"
   machine_type = "g1-small"
   boot_disk {
     initialize_params {
@@ -29,7 +29,7 @@ resource "google_compute_instance" "vm_instance" {
 
   metadata_startup_script = "sudo apt get -y update && sudo apt-get -y install nginx && sudo service nginx start"
 
-  count = 3
+
 }
 
 
