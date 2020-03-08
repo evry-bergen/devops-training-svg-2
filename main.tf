@@ -56,9 +56,11 @@ resource "google_container_node_pool" "primary_preemptible_nodes" {
   cluster    = google_container_cluster.primary.name
   node_count = 1
 
+
   node_config {
-    preemptible  = true
-    machine_type = "n1-standard-1"
+    preemptible     = true
+    machine_type    = "n1-standard-1"
+    service_account = "terraform-shamops@svg-devops-training-2.iam.gserviceaccount.com"
 
     metadata = {
       disable-legacy-endpoints = "true"
