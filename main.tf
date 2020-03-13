@@ -58,9 +58,11 @@ resource "google_container_node_pool" "primary_preemptible_nodes" {
   location   = "europe-north1"
   cluster    = google_container_cluster.primary.name
   node_count = 1
+  version = data.google_container_engine_versions.gke-versions.latest_node_version
 
 
   node_config {
+    
     preemptible     = true
     machine_type    = "n1-standard-1"
     service_account = "terraform-shamops@svg-devops-training-2.iam.gserviceaccount.com"
