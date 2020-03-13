@@ -34,7 +34,6 @@ resource "google_compute_subnetwork" "network-with-private-secondary-ip-ranges" 
 resource "google_container_cluster" "primary" {
   name         = "my-gke-cluster"
   location     = "europe-north1"
-  node_version = data.google_container_engine_versions.gke-versions.latest_node_version
   network      = google_compute_network.vpc_network.self_link
   subnetwork   = google_compute_subnetwork.network-with-private-secondary-ip-ranges.self_link
   # We can't create a cluster with no node pool defined, but we want to only use
