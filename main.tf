@@ -32,10 +32,10 @@ resource "google_compute_subnetwork" "network-with-private-secondary-ip-ranges" 
 }
 
 resource "google_container_cluster" "primary" {
-  name         = "my-gke-cluster"
-  location     = "europe-north1"
-  network      = google_compute_network.vpc_network.self_link
-  subnetwork   = google_compute_subnetwork.network-with-private-secondary-ip-ranges.self_link
+  name       = "my-gke-cluster"
+  location   = "europe-north1"
+  network    = google_compute_network.vpc_network.self_link
+  subnetwork = google_compute_subnetwork.network-with-private-secondary-ip-ranges.self_link
   # We can't create a cluster with no node pool defined, but we want to only use
   # separately managed node pools. So we create the smallest possible default
   # node pool and immediately delete it.
